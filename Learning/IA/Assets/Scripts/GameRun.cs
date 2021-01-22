@@ -61,6 +61,7 @@ public class GameRun : MonoBehaviour
 
         agent.Initialize();
 
+        agent.LoadQTable();
 
         ///////////////////////////////////////
         // Start the game
@@ -250,4 +251,6 @@ public class GameRun : MonoBehaviour
     	else if(score > 0) return RWD_HAND_WON;
     	else return RWD_HAND_LOST;
     }
+
+   
 }

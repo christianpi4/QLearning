@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Barracuda;
 
+[System.Serializable]
+
 public class Agent : MonoBehaviour
 {
 	// Neural network: asset and worker
@@ -235,6 +237,8 @@ public class Agent : MonoBehaviour
 				if (qTable [state, col] > qTable [state, colMax])
 					colMax = col;
 
+            //SaveQTable();
+
             Debug.Log("QLEANING------------------");
             action = colMax;
 		}
@@ -270,5 +274,19 @@ public class Agent : MonoBehaviour
    		return cards;
    	}
 
+    public void SaveQTable()
+    {
+        SaveSystem.SaveQTable(qTable);
+    }
+
+    public void LoadQTable()
+    {
+        QTableData data = SaveSystem.LoadQtable();
+
+        qTable = data.qTable;
+
+    }
 
 }
+
+
