@@ -28,6 +28,16 @@ public class GameRun : MonoBehaviour
 
 	// Other UI elements
 	private UnityEngine.UI.Text textDeck;
+    private UnityEngine.UI.Text playerWins;
+    private UnityEngine.UI.Text enemyWins;
+    private UnityEngine.UI.Text draw;
+    public  UnityEngine.UI.Text actionText;
+    private UnityEngine.UI.Text rounds;
+    private int playerWin = 0;
+    private int enemyWin = 0;
+    private int tie = 0;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +58,11 @@ public class GameRun : MonoBehaviour
         // UI management
         ///////////////////////////////////////
         textDeck = GameObject.Find("TextDeck").GetComponent<UnityEngine.UI.Text>();
+        playerWins = GameObject.Find("playerwins").GetComponent<UnityEngine.UI.Text>();
+        enemyWins = GameObject.Find("enemywins").GetComponent<UnityEngine.UI.Text>();
+        draw = GameObject.Find("draws").GetComponent<UnityEngine.UI.Text>();
+        actionText = GameObject.Find("actions").GetComponent<UnityEngine.UI.Text>();
+        rounds = GameObject.Find("rounds").GetComponent<UnityEngine.UI.Text>();
 
 
         ///////////////////////////////////////
@@ -61,7 +76,7 @@ public class GameRun : MonoBehaviour
 
         agent.Initialize();
 
-        agent.LoadQTable();
+       // agent.LoadQTable();
 
         ///////////////////////////////////////
         // Start the game
@@ -147,7 +162,7 @@ public class GameRun : MonoBehaviour
 	        // Generate player deck
 	        ///////////////////////////////////////
 	        int [] deck   = GeneratePlayerDeck();
-	        textDeck.text = "Deck: ";
+	        textDeck.text = "DECK: ";
 	        foreach(int card in deck)
 	        	textDeck.text += card.ToString() + "/";
 
@@ -162,9 +177,15 @@ public class GameRun : MonoBehaviour
 
 	        int [] action = agent.Play(deck, enemyChars);
 
-	        textDeck.text += " Action:";
-	        foreach(int a in action)
-	        	textDeck.text += a.ToString() + "/";
+            //textDeck.text += " Action:";
+            //foreach (int a in action)
+            //    textDeck.text += a.ToString() + "/";
+
+            actionText.text = "ACTION: ";
+            for(int i = 0; i < action.Length; i++)
+                actionText.text += action[i] + "/";
+
+
 
             // Destroy player previous sprites (if any) and generate new cards
             int player = 0;
@@ -233,6 +254,7 @@ public class GameRun : MonoBehaviour
 
         // Second see who wins
         int score = 0;
+ 
     	for(int i=0; i<NUM_ENEMY_CARDS; i++)
     	{
     		if(action[i] != enemyChars[i])
@@ -246,10 +268,31 @@ public class GameRun : MonoBehaviour
     		}
     		
     	}
-        
-        if (score == 0) return RWD_TIE;
-    	else if(score > 0) return RWD_HAND_WON;
-    	else return RWD_HAND_LOST;
+
+
+        if (score == 0) {
+            tie++;
+            draw.text = "DRAWS: ";
+            draw.text += tie;
+            return RWD_TIE; 
+        } else if (score > 0)
+        {
+            playerWin++;
+            playerWins.text = "WINS:  ";
+            playerWins.text += playerWin;
+
+            return RWD_HAND_WON;
+        }
+        else
+        {
+            enemyWin++;
+            enemyWins.text = "WINS: ";
+            enemyWins.text += enemyWin;
+            return RWD_HAND_LOST;
+        }
+
+        rounds.text = "ROUNDS: ";
+        rounds.text += (enemyWin + playerWin + tie);
     }
 
    
