@@ -12,7 +12,8 @@ public class GameRun : MonoBehaviour
 
 	// Game management
 	private GameObject enemyCards;
-	private int [] enemyChars;	
+    private GameObject playerCards;
+    private int [] enemyChars;	
 	private Agent agent;
 
 	private int NUM_ENEMY_CARDS = 3;
@@ -54,8 +55,9 @@ public class GameRun : MonoBehaviour
         ///////////////////////////////////////
         enemyCards = GameObject.Find("EnemyCards");
         enemyChars = new int[NUM_ENEMY_CARDS];
-        
-        agent      = GameObject.Find("AgentManager").GetComponent<Agent>();
+
+        playerCards = GameObject.Find("PlayerCards");
+        agent = GameObject.Find("AgentManager").GetComponent<Agent>();
 
         agent.Initialize();
 
@@ -101,7 +103,24 @@ public class GameRun : MonoBehaviour
    	  	else if(chars[idx].name.StartsWith("opossum")) label = 2;
 
     	return label;
-    } 
+    }
+
+    private void GeneratePlayerCard(Transform parent, int charindex)
+    {
+
+        int idx = Random.Range(0, backgrounds.Length);
+        Instantiate(backgrounds[idx], parent.position, Quaternion.identity, parent);
+
+
+        idx = Random.Range(0, props.Length);
+        Vector3 position = new Vector3(Random.Range(-3.0f, 3.0f), Random.Range(-3.0f, 3.0f), -1.0f);
+        Instantiate(props[idx], parent.position + position, Quaternion.identity, parent);
+
+        idx = Random.Range(0, chars.Length / NUM_CLASSES);
+        position = new Vector3(Random.Range(-3.0f, 3.0f), Random.Range(-3.0f, 3.0f), -2.0f);
+        Instantiate(chars[charindex * (chars.Length/NUM_CLASSES) + idx], parent.position + position, Quaternion.identity, parent);
+
+    }
 
     // Generate another turn
     IEnumerator GenerateTurn()
@@ -112,7 +131,7 @@ public class GameRun : MonoBehaviour
 	        // Generate enemy cards
 	        ///////////////////////////////////////
 
-	    	// Destroy previous sprites (if any) and generate new cards
+	    	// Destroy enemy previous sprites (if any) and generate new cards
 	    	int c = 0;
 	    	foreach(Transform card in enemyCards.transform) {
 	    		foreach(Transform sprite in card) {
@@ -146,13 +165,25 @@ public class GameRun : MonoBehaviour
 	        foreach(int a in action)
 	        	textDeck.text += a.ToString() + "/";
 
+            // Destroy player previous sprites (if any) and generate new cards
+            int player = 0;
+            foreach (Transform card in playerCards.transform)
+            {
+                foreach (Transform sprite in card)
+                {
+                    Destroy(sprite.gameObject);
+                }
+
+                GeneratePlayerCard(card, action[player]);
+                player++;
+
+            }
 
 
-
-	        ///////////////////////////////////////
-	        // Compute reward
-	        ///////////////////////////////////////
-	        float reward = ComputeReward(agent.myCards, action);
+            ///////////////////////////////////////
+            // Compute reward
+            ///////////////////////////////////////
+            float reward = ComputeReward(agent.myCards, action);
 	        
 	        Debug.Log("Turn/reward: " + turn.ToString() + "->" + reward.ToString());
 
