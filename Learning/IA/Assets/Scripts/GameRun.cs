@@ -36,6 +36,7 @@ public class GameRun : MonoBehaviour
     private int playerWin = 0;
     private int enemyWin = 0;
     private int tie = 0;
+    private int totalrounds = 0;
 
 
 
@@ -75,8 +76,8 @@ public class GameRun : MonoBehaviour
         agent = GameObject.Find("AgentManager").GetComponent<Agent>();
 
         agent.Initialize();
-
-       // agent.LoadQTable();
+        agent.SaveQTable();
+        //agent.LoadQTable();
 
         ///////////////////////////////////////
         // Start the game
@@ -166,14 +167,17 @@ public class GameRun : MonoBehaviour
 	        foreach(int card in deck)
 	        	textDeck.text += card.ToString() + "/";
 
+            totalrounds++;
+            rounds.text = " ";
+            rounds.text += totalrounds;
 
-	        ///////////////////////////////////////
-	        // Tell the player to play
-	        ///////////////////////////////////////
+            ///////////////////////////////////////
+            // Tell the player to play
+            ///////////////////////////////////////
 
-	        // IMPORTANT: wait until the frame is rendered so the player sees
-	        //            the newly generated cards (otherwise it will see the previous ones)
-	        yield return new WaitForEndOfFrame();
+            // IMPORTANT: wait until the frame is rendered so the player sees
+            //            the newly generated cards (otherwise it will see the previous ones)
+            yield return new WaitForEndOfFrame();
 
 	        int [] action = agent.Play(deck, enemyChars);
 
@@ -290,9 +294,6 @@ public class GameRun : MonoBehaviour
             enemyWins.text += enemyWin;
             return RWD_HAND_LOST;
         }
-
-        rounds.text = "ROUNDS: ";
-        rounds.text += (enemyWin + playerWin + tie);
     }
 
    

@@ -8,7 +8,7 @@ public static class SaveSystem
     public static void SaveQTable(float[,] qTable)
     {
         BinaryFormatter formatter = new BinaryFormatter();
-        string path = Application.persistentDataPath + "/qTableLearning.ZeroEngine";
+        string path = Application.dataPath + "/qTableLearning.ZeroEngine";
         FileStream stream = new FileStream(path, FileMode.Create);
 
         QTableData data = new QTableData(qTable);
@@ -19,7 +19,7 @@ public static class SaveSystem
 
     public static QTableData LoadQtable()
     {
-        string path = Application.persistentDataPath + "/qTableLearning.ZeroEngine";
+        string path = Application.dataPath + "/qTableLearning.ZeroEngine";
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
