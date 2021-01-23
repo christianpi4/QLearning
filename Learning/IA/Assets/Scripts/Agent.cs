@@ -45,7 +45,7 @@ public class Agent : MonoBehaviour
 	private float minEpsilon = 0.1f;
 	// Factor to reduce epsilon (number of actions that it
 	// takes it to go down to minEpsilon)
-	private int coolingSteps = 4000;
+	private int coolingSteps = 2000;
 
 
 
