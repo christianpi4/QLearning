@@ -33,11 +33,16 @@ public class GameRun : MonoBehaviour
     private UnityEngine.UI.Text draw;
     public  UnityEngine.UI.Text actionText;
     private UnityEngine.UI.Text rounds;
+    private UnityEngine.UI.Text train;
+    private UnityEngine.UI.Text gameswinplayer;
+    private UnityEngine.UI.Text gameswinenemy;
     private int playerWin = 0;
     private int enemyWin = 0;
     private int tie = 0;
     private int totalrounds = 0;
-
+    private int playergames = 0;
+    private int enemygames = 0;
+    private int sumrounds = 0;
 
 
     // Start is called before the first frame update
@@ -64,7 +69,9 @@ public class GameRun : MonoBehaviour
         draw = GameObject.Find("draws").GetComponent<UnityEngine.UI.Text>();
         actionText = GameObject.Find("actions").GetComponent<UnityEngine.UI.Text>();
         rounds = GameObject.Find("rounds").GetComponent<UnityEngine.UI.Text>();
-
+        train = GameObject.Find("training").GetComponent<UnityEngine.UI.Text>();
+        gameswinenemy = GameObject.Find("enemygames").GetComponent<UnityEngine.UI.Text>();
+        gameswinplayer = GameObject.Find("playergames").GetComponent<UnityEngine.UI.Text>();
 
         ///////////////////////////////////////
         // Game management
@@ -76,8 +83,7 @@ public class GameRun : MonoBehaviour
         agent = GameObject.Find("AgentManager").GetComponent<Agent>();
 
         agent.Initialize();
-        agent.SaveQTable();
-        //agent.LoadQTable();
+        agent.LoadQTable();
 
         ///////////////////////////////////////
         // Start the game
@@ -141,31 +147,31 @@ public class GameRun : MonoBehaviour
 
     // Generate another turn
     IEnumerator GenerateTurn()
-    {	
-    	for(int turn=0; turn<100000; turn++) {
+    {
+        for (int turn = 0; turn < 100000; turn++) {
 
-	        ///////////////////////////////////////
-	        // Generate enemy cards
-	        ///////////////////////////////////////
+            ///////////////////////////////////////
+            // Generate enemy cards
+            ///////////////////////////////////////
 
-	    	// Destroy enemy previous sprites (if any) and generate new cards
-	    	int c = 0;
-	    	foreach(Transform card in enemyCards.transform) {
-	    		foreach(Transform sprite in card) {
-	    			Destroy(sprite.gameObject);
-	    		}
+            // Destroy enemy previous sprites (if any) and generate new cards
+            int c = 0;
+            foreach (Transform card in enemyCards.transform) {
+                foreach (Transform sprite in card) {
+                    Destroy(sprite.gameObject);
+                }
 
-	    		enemyChars[c++] = GenerateCard(card);
-	    	}
+                enemyChars[c++] = GenerateCard(card);
+            }
 
 
-	        ///////////////////////////////////////
-	        // Generate player deck
-	        ///////////////////////////////////////
-	        int [] deck   = GeneratePlayerDeck();
-	        textDeck.text = "DECK: ";
-	        foreach(int card in deck)
-	        	textDeck.text += card.ToString() + "/";
+            ///////////////////////////////////////
+            // Generate player deck
+            ///////////////////////////////////////
+            int[] deck = GeneratePlayerDeck();
+            textDeck.text = "DECK: ";
+            foreach (int card in deck)
+                textDeck.text += card.ToString() + "/";
 
             totalrounds++;
             rounds.text = " ";
@@ -179,14 +185,14 @@ public class GameRun : MonoBehaviour
             //            the newly generated cards (otherwise it will see the previous ones)
             yield return new WaitForEndOfFrame();
 
-	        int [] action = agent.Play(deck, enemyChars);
+            int[] action = agent.Play(deck, enemyChars);
 
             //textDeck.text += " Action:";
             //foreach (int a in action)
             //    textDeck.text += a.ToString() + "/";
 
             actionText.text = "ACTION: ";
-            for(int i = 0; i < action.Length; i++)
+            for (int i = 0; i < action.Length; i++)
                 actionText.text += action[i] + "/";
 
 
@@ -209,12 +215,48 @@ public class GameRun : MonoBehaviour
             ///////////////////////////////////////
             // Compute reward
             ///////////////////////////////////////
+
+            if (totalrounds > 10) { 
             float reward = ComputeReward(agent.myCards, action);
-	        
-	        Debug.Log("Turn/reward: " + turn.ToString() + "->" + reward.ToString());
 
-	        agent.GetReward(reward);
+            Debug.Log("Turn/reward: " + turn.ToString() + "->" + reward.ToString());
 
+            agent.GetReward(reward);
+                train.text = "SIMULATING";
+
+                gameswinplayer.text = "GAMES: ";
+                gameswinplayer.text += playergames;
+
+                gameswinenemy.text = "GAMES: ";
+                gameswinenemy.text += enemygames;
+
+                sumrounds = enemyWin + playerWin + tie;
+            }
+            else
+            {
+                train.text = "TRAINING";
+            }
+
+            if(sumrounds == 15)
+            {
+                if(playerWin > enemyWin)
+                    playergames++;
+                
+                if(enemyWin > playerWin)
+                    enemygames++;
+
+                playerWin = enemyWin = tie = sumrounds = 0;
+
+
+                playerWins.text = "WINS: ";
+                playerWins.text += playerWin;
+                
+                enemyWins.text = "WINS: ";
+                enemyWins.text += enemyWin;
+
+                draw.text = "DRAWS: ";
+                draw.text += tie;
+            }
 
 	        ///////////////////////////////////////
 	        // Manage turns/games

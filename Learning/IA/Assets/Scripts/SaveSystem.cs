@@ -11,6 +11,7 @@ public static class SaveSystem
         string path = Application.dataPath + "/qTableLearning.ZeroEngine";
         FileStream stream = new FileStream(path, FileMode.Create);
 
+        Debug.Log("Saving into path" + path);
         QTableData data = new QTableData(qTable);
 
         formatter.Serialize(stream, data);
@@ -26,7 +27,7 @@ public static class SaveSystem
             FileStream stream = new FileStream(path, FileMode.Open);
 
             QTableData data = formatter.Deserialize(stream) as QTableData;
-
+            Debug.Log("Loading from path" + path);
             stream.Close();
 
             return data;
