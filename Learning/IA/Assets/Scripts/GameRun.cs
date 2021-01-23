@@ -216,12 +216,13 @@ public class GameRun : MonoBehaviour
             // Compute reward
             ///////////////////////////////////////
 
-            if (totalrounds > 10) { 
-            float reward = ComputeReward(agent.myCards, action);
+            if (totalrounds > 100) { 
 
-            Debug.Log("Turn/reward: " + turn.ToString() + "->" + reward.ToString());
+                float reward = ComputeReward(agent.myCards, action);
 
-            agent.GetReward(reward);
+                Debug.Log("Turn/reward: " + turn.ToString() + "->" + reward.ToString());
+
+                agent.GetReward(reward);
                 train.text = "SIMULATING";
 
                 gameswinplayer.text = "GAMES: ";
@@ -239,23 +240,23 @@ public class GameRun : MonoBehaviour
 
             if(sumrounds == 15)
             {
-                if(playerWin > enemyWin)
-                    playergames++;
-                
-                if(enemyWin > playerWin)
-                    enemygames++;
+               if(playerWin > enemyWin)
+                   playergames++;
+               
+               if(enemyWin > playerWin)
+                   enemygames++;
 
-                playerWin = enemyWin = tie = sumrounds = 0;
+               playerWin = enemyWin = tie = sumrounds = 0;
 
 
-                playerWins.text = "WINS: ";
-                playerWins.text += playerWin;
-                
-                enemyWins.text = "WINS: ";
-                enemyWins.text += enemyWin;
+               playerWins.text = "WINS: ";
+               playerWins.text += playerWin;
+               
+               enemyWins.text = "WINS: ";
+               enemyWins.text += enemyWin;
 
-                draw.text = "DRAWS: ";
-                draw.text += tie;
+               draw.text = "DRAWS: ";
+               draw.text += tie;
             }
 
 	        ///////////////////////////////////////

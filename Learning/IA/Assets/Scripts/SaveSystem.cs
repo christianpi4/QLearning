@@ -5,14 +5,14 @@ using System.Runtime.Serialization.Formatters.Binary;
 public static class SaveSystem
 {
 
-    public static void SaveQTable(float[,] qTable)
+    public static void SaveQTable(float[,] qTable, float epsilon)
     {
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.dataPath + "/qTableLearning.ZeroEngine";
         FileStream stream = new FileStream(path, FileMode.Create);
 
         Debug.Log("Saving into path" + path);
-        QTableData data = new QTableData(qTable);
+        QTableData data = new QTableData(qTable, epsilon);
 
         formatter.Serialize(stream, data);
         stream.Close();

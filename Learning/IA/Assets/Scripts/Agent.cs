@@ -276,13 +276,14 @@ public class Agent : MonoBehaviour
 
     public void SaveQTable()
     {
-        SaveSystem.SaveQTable(qTable);
+        SaveSystem.SaveQTable(qTable, epsilon);
     }
 
     public void LoadQTable()
     {
         QTableData data = SaveSystem.LoadQtable();
 
+        epsilon = data.epsilon;
         qTable = data.qTable;
 
     }

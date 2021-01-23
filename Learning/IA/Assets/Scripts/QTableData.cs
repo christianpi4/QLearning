@@ -7,10 +7,13 @@ using UnityEngine;
 public class QTableData
 {
     public float[,] qTable;
+    public float epsilon;
 
-    public QTableData (float[,] _qTable)
+    public QTableData (float[,] _qTable, float _epsilon)
     {
         qTable = _qTable;
+        epsilon = _epsilon;
+
     }
 
 }
