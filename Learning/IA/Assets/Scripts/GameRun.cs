@@ -238,7 +238,7 @@ public class GameRun : MonoBehaviour
                 train.text = "TRAINING";
             }
 
-            if(sumrounds == 15)
+            if (sumrounds == 15)
             {
                if(playerWin > enemyWin)
                    playergames++;

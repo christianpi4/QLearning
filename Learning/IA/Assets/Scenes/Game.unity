@@ -3645,7 +3645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3be1e4bbfeb85aed2a5fbbd198ea9042, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CNN_Model_Asset: {fileID: 5022602860645237092, guid: cb303ad1ba7642f1884c78911dd34618, type: 3}
+  CNN_Model_Asset: {fileID: 5022602860645237092, guid: f304a4681fea07444acbed29a9f970ae, type: 3}
   renderTextures:
   - {fileID: 8400000, guid: aa0eeb3be1f32bdbeba6071b95df19e1, type: 2}
   - {fileID: 8400000, guid: 584d6a970c105539b81e55beb187d280, type: 2}

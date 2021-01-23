@@ -283,8 +283,11 @@ public class Agent : MonoBehaviour
     {
         QTableData data = SaveSystem.LoadQtable();
 
-        epsilon = data.epsilon;
-        qTable = data.qTable;
+        if(data!= null)
+        {
+            epsilon = data.epsilon;
+            qTable = data.qTable;
+        }
 
     }
 
